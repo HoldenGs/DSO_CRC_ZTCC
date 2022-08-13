@@ -7,4 +7,5 @@ pub struct Trellis {
     pub numStates: usize,
     pub nextStates: Vec2d<p16>,
     pub outputs:  Vec2d<p16>,
+    pub terminations: Vec<Vec<u16>>,
 }

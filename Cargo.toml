@@ -1,0 +1,16 @@
+[package]
+name = "DSO_CRC_ZTCC"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+convert-base = "1.1.2"
+bit_reverse = "0.1.8"
+gf256 = "0.3.0"
+queues = "1.0.2"
+
+[[bin]]
+name = "DSO_CRC_ZTCC"
+path = "src/main.rs"

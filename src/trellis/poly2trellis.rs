@@ -46,13 +46,13 @@ use crate::Vec2d::{
 //         }
 //     }
 
-//     let trellis: Trellis = Trellis {
-//         numInputSymbols: cols,
-//         numOutputSymbols: numOutputSymbols, // will have to change this to find the n*m size for a 2d array at some point, but for now (since we only have 1 input) this will work
-//         numStates: rows,
-//         nextStates: states,
-//         outputs: outputs,
-//     };
+    // let trellis: Trellis = Trellis {
+    //     numInputSymbols: cols,
+    //     numOutputSymbols: numOutputSymbols, // will have to change this to find the n*m size for a 2d array at some point, but for now (since we only have 1 input) this will work
+    //     numStates: rows,
+    //     nextStates: states,
+    //     outputs: outputs,
+    // };
 
 //     trellis
 // }
