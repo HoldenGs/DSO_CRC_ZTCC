@@ -10,6 +10,7 @@ convert-base = "1.1.2"
 bit_reverse = "0.1.8"
 gf256 = "0.3.0"
 queues = "1.0.2"
+num-bigint = "0.4.3"
 
 [[bin]]
 name = "DSO_CRC_ZTCC"
