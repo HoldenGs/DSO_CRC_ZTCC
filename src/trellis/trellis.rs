@@ -1,5 +1,5 @@
 use crate::Vec2d::Vec2d;
-use ::gf256::*;
+use ::gf256::p16;
 
 pub struct Trellis {
     pub numInputSymbols: usize,

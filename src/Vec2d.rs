@@ -13,12 +13,12 @@ pub struct Vec2d<T> {
     pub col: usize,
 }
 
-pub fn Fill(fill: usize, len: usize) -> Vec<u16> {
+pub fn fill(fill: usize, len: usize) -> Vec<u16> {
     let vec: Vec<u16> = (0..len).map(|_| { fill as u16 }).collect();
     vec
 }
 
-pub fn Fill_p16(fill: usize, len: usize) -> Vec<p16> {
+pub fn fill_p16(fill: usize, len: usize) -> Vec<p16> {
     let vec: Vec<p16> = (0..len).map(|_| { p16(fill as u16) }).collect();
     vec
 }

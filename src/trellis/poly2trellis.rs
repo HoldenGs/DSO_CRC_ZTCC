@@ -1,10 +1,7 @@
 
-use crate::trellis::trellis::Trellis;
 
-use crate::Vec2d::{
-    Vec2d,
-    Fill,
-};
+
+
 
 // pub fn poly2trellis_bruteforce(constraint_length: Vec<u16>, code_generator: Vec2d<u16>) -> Trellis {
 
