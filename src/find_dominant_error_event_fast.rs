@@ -1,13 +1,12 @@
 
-use crate::trellis::trellis::Trellis;
+
 //use crate::trellis::poly2trellis::poly2trellis_bruteforce;
 
-use crate::Vec2d::{
-    Vec2d,
-    Fill
+use crate::vec2d::{
+    Vec2d
 };
 
-pub fn find_dominant_error_event_fast(constraint_length: Vec<u16>, code_generator: Vec2d<u16>, fd_tilde: i8) {
+pub fn _find_dominant_error_event_fast(_constraint_length: Vec<u16>, _code_generator: Vec2d<u16>, _fd_tilde: i8) {
     
     // let trellis: Trellis = poly2trellis_bruteforce(constraint_length, code_generator);
 

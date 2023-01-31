@@ -10,7 +10,19 @@ convert-base = "1.1.2"
 bit_reverse = "0.1.8"
 gf256 = "0.3.0"
 queues = "1.0.2"
-num-bigint = "0.4.3"
+rayon = "1.5.0"
+ndarray = "0.15.6"
+polynomen = "1.0.0"
+num-traits = "0.2.15"
+nalgebra = "0.31.1"
+bincode = "1.3.3"
+serde = { version = "1.0.150", features = ["derive"] }
+serde_json = "1.0"
+serde_derive = "1.0.150"
+
+[dependencies.num-bigint]
+version = "0.4.3"
+features = ["serde"]
 
 [[bin]]
 name = "DSO_CRC_ZTCC"

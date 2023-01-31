@@ -6,14 +6,14 @@ use ::gf256::p16;
 use ::bit_reverse::LookupReverse;
 use ::queues::{IsQueue, Queue, queue};
 
-use crate::Vec2d::{
+use crate::vec2d::{
     Vec2d,
     fill_p16,
     fill,
 };
 
 // Creates a trellis and termination sequence for a nonsystematic high-rate ( R = (n-1) / n ) feedback encoder
-pub fn generate_feedback_trellis(v: u16, numerators: Vec<u16>, octal_denominator: u16) -> Trellis {
+pub fn generate_feedback_trellis(v: u16, numerators: [u16; 3], octal_denominator: u16) -> Trellis {
 
     const TWO: usize = 2;
     let k: u16 = numerators.len() as u16;
@@ -54,14 +54,14 @@ pub fn generate_feedback_trellis(v: u16, numerators: Vec<u16>, octal_denominator
             let revved_remainder: p16 = p16((u16::from(remainder)).swap_bits() >> (16 - v + 1));
             *next_states.index_mut(current_state, input_symbol) = revved_remainder;
             *outputs.index_mut(current_state, input_symbol) = p16(input_symbol as u16) + (quotient << k); // add quotient bit after the other bits
-            if current_state == 63 && input_symbol == 6 {
-                println!("input_symbol: {:b}", input_symbol);
-                println!("total num: {:b}", total_numerator);
-                println!("denom: {:b}", decimal_denominator);
-                println!("revved num: {:b}", revved_total_num);
-                println!("revved denom: {:b}", revved_denom);
-                println!("remainder: {:b}", remainder);
-            }
+            // if current_state == 63 && input_symbol == 6 {
+            //     println!("input_symbol: {:b}", input_symbol);
+            //     println!("total num: {:b}", total_numerator);
+            //     println!("denom: {:b}", decimal_denominator);
+            //     println!("revved num: {:b}", revved_total_num);
+            //     println!("revved denom: {:b}", revved_denom);
+            //     println!("remainder: {:b}", remainder);
+            // }
         }
     }
 
@@ -122,10 +122,10 @@ pub fn generate_feedback_trellis(v: u16, numerators: Vec<u16>, octal_denominator
     //println!("{:?}", terminations);
 
     let trellis: Trellis = Trellis {
-        numInputSymbols: num_input_symbols,
-        numOutputSymbols: num_output_symbols,
-        numStates: num_states,
-        nextStates: next_states,
+        num_input_symbols: num_input_symbols,
+        num_output_symbols: num_output_symbols,
+        num_states: num_states,
+        next_states: next_states,
         outputs,
         terminations,
     };

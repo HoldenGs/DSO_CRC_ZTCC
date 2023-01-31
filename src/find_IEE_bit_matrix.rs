@@ -1,22 +1,17 @@
 
-use num_bigint::BigUint;
-
-use rayon::prelude::*;
 
 use crate::trellis::trellis::Trellis;
 
-use serde::{Deserialize, Serialize};
-//use serde_derive::{Serialize, Deserialize};
+use matrix::BitMatrix;	
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ErrorEvents {
-    pub error_events: Vec<Vec<BigUint>>,
-    pub error_event_lengths: Vec<Vec<u32>>
+struct VecVisitable<T> {
+    pub vec: Vec<T>,
+    pub visited: bool,
 }
 
 pub fn find_irreducible_error_event(
-    _v: u16, numerators: [u16; 3], _denominator: u16, max_search_distance: usize, trellis: &Trellis
-) -> ErrorEvents {
+    v: u16, numerators: Vec<u16>, denominator: u16, max_search_distance: usize, trellis: Trellis
+) -> Vec<BitMatrix> {
     
     let _path: String = "./Simulation_results/".to_owned();
     let k = numerators.len();
@@ -39,8 +34,8 @@ pub fn find_irreducible_error_event(
     // Solution: BigInt
 
     const MAX_ITERATION: usize = 200;
-    let mut zero_state: Vec<Vec<Vec<BigUint>>> = vec![];
-    let mut column: Vec<Vec<Vec<Vec<BigUint>>>> = vec![vec![]; 2];
+    let mut zero_state: Vec<Vec<BitMatrix>> = vec![];
+    let mut column: Vec<Vec<Vec<BitMatrix>>> = vec![vec![]; 2];
 
     //let mut column: ColumnType = ColumnType.new();
 
@@ -49,11 +44,11 @@ pub fn find_irreducible_error_event(
 
         let index: usize = ((i + 1) % 2) as usize;
         let prev_index: usize = (i % 2) as usize;
-        column[index] = vec![vec![]; trellis.num_states];
+        column[index] = vec![vec![]; trellis.numStates];
 
         if i == 0 {
-            for input in 1..trellis.num_input_symbols {
-                let next_state = u16::from(*trellis.next_states.index(0, input)) as usize;
+            for input in 1..trellis.numInputSymbols {
+                let next_state = u16::from(*trellis.nextStates.index(0, input)) as usize;
                 if column[index][next_state].is_empty() {
                     column[index][next_state] = vec![vec![]; max_search_distance];
                 }
@@ -61,16 +56,20 @@ pub fn find_irreducible_error_event(
                 // if input == 2 {
                 //     println!("{} {}", trellis.outputs.index(0, input), weight);
                 // }
+                let matrix = BitMatrix::new(1, k);
+                for i in 0..k {
+                    matrix.set();
+                }
                 column[index][next_state as usize][(weight - 1) as usize].push(BigUint::from(input));
             }
         } else {
-            for current_state in 1..trellis.num_states {
+            for current_state in 1..trellis.numStates {
                 if !column[prev_index][current_state].is_empty() {
                     for distance in 0..max_search_distance {
                         if !column[prev_index][current_state][distance].is_empty() {
-                            for input in 0..trellis.num_input_symbols {
+                            for input in 0..trellis.numInputSymbols {
 
-                                let next_state = usize::from(*trellis.next_states.index(current_state, input));
+                                let next_state = usize::from(*trellis.nextStates.index(current_state, input));
                                 if column[index][next_state].is_empty() {
                                     column[index][next_state] = vec![vec![]; max_search_distance];
                                 }
@@ -103,8 +102,7 @@ pub fn find_irreducible_error_event(
 
     let _length = zero_state.len();
 
-    let mut error_events: Vec<Vec<BigUint>> = vec![vec![]; max_search_distance];
-    let mut error_event_lengths: Vec<Vec<u32>> = vec![vec![]; max_search_distance];
+    let mut error_events: Vec<BitMatrix> = vec![vec![]; max_search_distance];
     
     for i in 0..MAX_ITERATION {
         if !zero_state[i].is_empty() {
@@ -114,29 +112,15 @@ pub fn find_irreducible_error_event(
                         error_events[distance] = zero_state[i][distance].clone();
                     } else {
                         let length = get_length(&error_events[distance][0]);
-                        // pad with zeros until uniform length
                         error_events[distance] = error_events[distance].par_iter().map(
                             |x| x << (k * (i + 1) - length)
                         ).collect();
                         error_events[distance].append(&mut zero_state[i][distance].clone());
                     }
-                    //error_event_lengths[distance].append(&mut vec![k as u32 * i as u32; zero_state[i][distance].len()]);
-                    error_event_lengths[distance].append(&mut vec![k as u32 * i as u32; get_length(&error_events[distance][0])]);
                 }
             }
         }
     }
 
-    ErrorEvents {
-        error_events,
-        error_event_lengths
-    }
-}
-
-fn get_length(num: &BigUint) -> usize {
-    let bits;
-    let bytes = num.to_bytes_be();
-    bits = 8 - bytes[0].leading_zeros() + 8 * (bytes.len() as u32 - 1);
-
-    bits as usize
+    error_events
 }
