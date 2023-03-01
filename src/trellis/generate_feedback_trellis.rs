@@ -54,14 +54,6 @@ pub fn generate_feedback_trellis(v: u16, numerators: [u16; 3], octal_denominator
             let revved_remainder: p16 = p16((u16::from(remainder)).swap_bits() >> (16 - v + 1));
             *next_states.index_mut(current_state, input_symbol) = revved_remainder;
             *outputs.index_mut(current_state, input_symbol) = p16(input_symbol as u16) + (quotient << k); // add quotient bit after the other bits
-            // if current_state == 63 && input_symbol == 6 {
-            //     println!("input_symbol: {:b}", input_symbol);
-            //     println!("total num: {:b}", total_numerator);
-            //     println!("denom: {:b}", decimal_denominator);
-            //     println!("revved num: {:b}", revved_total_num);
-            //     println!("revved denom: {:b}", revved_denom);
-            //     println!("remainder: {:b}", remainder);
-            // }
         }
     }
 
@@ -83,7 +75,11 @@ pub fn generate_feedback_trellis(v: u16, numerators: [u16; 3], octal_denominator
                 for pre_state in 0..num_states {
                     if next_states.row(pre_state).contains(&p16(target_state)) && visited[pre_state] == 0 {
                         visited[pre_state] = 1;
-                        queue.add(pre_state as u16);
+                        let res = queue.add(pre_state as u16);
+                        match res {
+                            Ok(correct) => correct,
+                            Err(error) => panic!("Problem adding to queue: {:?}", error),
+                        };
                         tree[pre_state] = target_state;
                     }
                 }
